@@ -9,7 +9,7 @@ class SnakeEnv(gym.Env):
     def __init__(self):
         pygame.init()
 
-        self.position  = []
+        self.position  = [[200, 200]]
         self.tail      = []
         self.blockSize = 20
         self.direction = 0
@@ -20,8 +20,7 @@ class SnakeEnv(gym.Env):
         
         self.screenHeight = 720
         self.screenWidth  = 1280
-        self.speed        = speed
-        self.screenSize   = (width, height)
+        self.screenSize   = (self.screenWidth, self.screenHeight)
         self.snakeColor   = (0, 255, 0)
         self.foodColor    = (255, 0, 0)
         self.newFood()
@@ -53,7 +52,7 @@ class SnakeEnv(gym.Env):
     def render(self):
         screen = pygame.display.set_mode(self.screenSize)
         screen.fill((255, 255, 255))
-        for i in self.player.position:
+        for i in self.position:
             pygame.draw.rect(screen, self.snakeColor, [i[0], i[1], self.blockSize, self.blockSize])
 
         pygame.draw.rect(screen, self.foodColor, [self.foodPosition[0], self.foodPosition[1], self.blockSize, self.blockSize])
@@ -80,7 +79,7 @@ class SnakeEnv(gym.Env):
             self.done = True
         if headPosition == self.foodPosition:
             self.score += 1
-            self.position.append(self.tail.copy())
+            self.position.append(self.position[0].copy())
             self.newFood()
             return True
 
@@ -91,7 +90,15 @@ class SnakeEnv(gym.Env):
         y    = self.position[0]
         z    = self.position
         size = self.blockSize
-        return [self.direction, x[0] <= y[0], x[1] >= y[1], x[0] == y[0], x[1] == y[1], int([y[0] - size, y[1]] in z), int([y[0] + size, y[1]] in z), int([y[0], y[1] - size] in z), int([y[0], y[1] + size] in z)]
+        return [self.direction,
+                x[0] < y[0],
+                x[1] < y[1],
+                x[0] == y[0],
+                x[1] == y[1],
+                int([y[0] - size, y[1]] in z),
+                int([y[0] + size, y[1]] in z),
+                int([y[0], y[1] - size] in z),
+                int([y[0], y[1] + size] in z)]
 
     def getReward(self):
         reward = -1
