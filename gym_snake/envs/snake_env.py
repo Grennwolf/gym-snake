@@ -1,4 +1,4 @@
-import pygame, sys, time
+import pygame, sys
 import numpy as np
 
 import gym
@@ -20,7 +20,6 @@ class SnakeEnv(gym.Env):
         
         self.screenHeight = 720
         self.screenWidth  = 1280
-        self.screenSize   = (self.screenWidth, self.screenHeight)
         self.snakeColor   = (0, 255, 0)
         self.foodColor    = (255, 0, 0)
         self.newFood()
@@ -50,7 +49,7 @@ class SnakeEnv(gym.Env):
         return self.getState()
 
     def render(self):
-        screen = pygame.display.set_mode(self.screenSize)
+        screen = pygame.display.set_mode((self.screenWidth, self.screenHeight))
         screen.fill((255, 255, 255))
         for i in self.position:
             pygame.draw.rect(screen, self.snakeColor, [i[0], i[1], self.blockSize, self.blockSize])
@@ -107,4 +106,6 @@ class SnakeEnv(gym.Env):
         return reward
 
     def close(self):
+        pygame.display.quit()
         pygame.quit()
+        sys.exit()
