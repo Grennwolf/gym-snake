@@ -1,13 +1,13 @@
 **Status:** In development
 
-##gym-snake
+## gym-snake
 
 The Snake environment is singleagent domain that was made for experiments with RL algorithms.
 
 # Installation
 
 ```bash
-git clone ..
+git clone https://github.com/Grennwolf/gym-snake.git
 cd gym-snake
 pip install -e .
 ```

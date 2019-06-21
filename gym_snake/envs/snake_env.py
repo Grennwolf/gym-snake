@@ -9,9 +9,9 @@ class SnakeEnv(gym.Env):
     def __init__(self):
         pygame.init()
 
-        self.position  = [[x, y]]
-        self.tail      = [[x, y]]
-        self.blockSize = blockSize
+        self.position  = []
+        self.tail      = []
+        self.blockSize = 20
         self.direction = 0
 
         self.score        = 0
@@ -24,13 +24,11 @@ class SnakeEnv(gym.Env):
         self.screenSize   = (width, height)
         self.snakeColor   = (0, 255, 0)
         self.foodColor    = (255, 0, 0)
-        # self.screen       = pygame.display.set_mode(self.screenSize)
         self.newFood()
 
     def step(self, action):
         self.direction = action
 
-        self.tail = self.position[-1].copy()
         for ind in np.arange(len(self.position) - 1, 0, -1):
             self.position[ind] = self.position[ind - 1].copy()
 
@@ -53,7 +51,13 @@ class SnakeEnv(gym.Env):
         return self.getState()
 
     def render(self):
-        pass
+        screen = pygame.display.set_mode(self.screenSize)
+        screen.fill((255, 255, 255))
+        for i in self.player.position:
+            pygame.draw.rect(screen, self.snakeColor, [i[0], i[1], self.blockSize, self.blockSize])
+
+        pygame.draw.rect(screen, self.foodColor, [self.foodPosition[0], self.foodPosition[1], self.blockSize, self.blockSize])
+        pygame.display.update()
 
     def newFood(self):
         """Generates new position for food."""
@@ -87,7 +91,7 @@ class SnakeEnv(gym.Env):
         y    = self.position[0]
         z    = self.position
         size = self.blockSize
-        return [x[0] <= y[0], x[1] >= y[1], x[0] == y[0], x[1] == y[1], self.direction, int([y[0] - size, y[1]] in z), int([y[0] + size, y[1]] in z), int([y[0], y[1] - size] in z), int([y[0], y[1] + size] in z)]
+        return [self.direction, x[0] <= y[0], x[1] >= y[1], x[0] == y[0], x[1] == y[1], int([y[0] - size, y[1]] in z), int([y[0] + size, y[1]] in z), int([y[0], y[1] - size] in z), int([y[0], y[1] + size] in z)]
 
     def getReward(self):
         reward = -1
@@ -96,4 +100,4 @@ class SnakeEnv(gym.Env):
         return reward
 
     def close(self):
-        pass
+        pygame.quit()
