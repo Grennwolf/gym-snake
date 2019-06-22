@@ -102,7 +102,7 @@ class SnakeEnv(gym.Env):
     def getReward(self):
         reward = -1
         if (self.checkPosition()):
-            reward = 0.5
+            reward = 1
         return reward
 
     def close(self):
