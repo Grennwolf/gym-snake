@@ -1,14 +1,13 @@
+import gym
 import numpy as np
 
-import gym
 from gym import error, spaces, utils
 from gym.utils import seeding
 
+
 class SnakeEnv(gym.Env):
     def __init__(self):
-
         self.position  = [[200, 200]]
-        self.tail      = []
         self.blockSize = 10
         self.direction = 0
 
@@ -23,8 +22,9 @@ class SnakeEnv(gym.Env):
         self.foodColor    = [255, 0, 0]
         self.newFood()
 
+
     def step(self, action):
-        if !self.done:
+        if not self.done:
             self.direction = action
 
             for ind in np.arange(len(self.position) - 1, 0, -1):
@@ -49,7 +49,7 @@ class SnakeEnv(gym.Env):
         return self.getState()
 
     def render(self):
-        screen = np.zeros((self.screenHeight, self.screenWidth, 3), dtype = int)
+        screen = np.zeros((self.screenHeight, self.screenWidth, 3), dtype=int)
         screen[:, :] = self.screenColor
 
         for i in self.position:
@@ -66,7 +66,8 @@ class SnakeEnv(gym.Env):
         blockSize = self.blockSize
         height    = self.screenHeight
         width     = self.screenWidth
-        self.foodPosition = [blockSize * np.random.randint(0, width / blockSize), blockSize * np.random.randint(0, height / blockSize)]
+        self.foodPosition = [blockSize * np.random.randint(0, width / blockSize),
+                             blockSize * np.random.randint(0, height / blockSize)]
 
     def checkPosition(self):
         """Check if game over or food eaten."""
@@ -78,7 +79,7 @@ class SnakeEnv(gym.Env):
         if headPosition[1] < 0 or headPosition[1] > height:
             self.done = True
 
-        if len(np.unique(self.position, axis = 0)) != len(self.position):
+        if len(np.unique(self.position, axis=0)) != len(self.position):
             self.done = True
         if headPosition == self.foodPosition:
             self.score += 1
