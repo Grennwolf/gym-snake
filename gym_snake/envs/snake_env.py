@@ -1,4 +1,3 @@
-import pygame, sys
 import numpy as np
 
 import gym
@@ -7,37 +6,38 @@ from gym.utils import seeding
 
 class SnakeEnv(gym.Env):
     def __init__(self):
-        pygame.init()
 
         self.position  = [[200, 200]]
         self.tail      = []
-        self.blockSize = 20
+        self.blockSize = 10
         self.direction = 0
 
         self.score        = 0
         self.n_actions    = 4
         self.done         = False
         
-        self.screenHeight = 720
-        self.screenWidth  = 1280
-        self.snakeColor   = (0, 255, 0)
-        self.foodColor    = (255, 0, 0)
+        self.screenHeight = 400
+        self.screenWidth  = 400
+        self.screenColor  = [255, 255, 255]
+        self.snakeColor   = [0, 255, 0]
+        self.foodColor    = [255, 0, 0]
         self.newFood()
 
     def step(self, action):
-        self.direction = action
+        if !self.done:
+            self.direction = action
 
-        for ind in np.arange(len(self.position) - 1, 0, -1):
-            self.position[ind] = self.position[ind - 1].copy()
+            for ind in np.arange(len(self.position) - 1, 0, -1):
+                self.position[ind] = self.position[ind - 1].copy()
 
-        if (self.direction == 0):
-            self.position[0][0] += self.blockSize
-        if (self.direction == 1):
-            self.position[0][1] += self.blockSize
-        if (self.direction == 2):
-            self.position[0][0] -= self.blockSize
-        if (self.direction == 3):
-            self.position[0][1] -= self.blockSize
+            if (self.direction == 0):
+                self.position[0][0] += self.blockSize
+            if (self.direction == 1):
+                self.position[0][1] += self.blockSize
+            if (self.direction == 2):
+                self.position[0][0] -= self.blockSize
+            if (self.direction == 3):
+                self.position[0][1] -= self.blockSize
 
         state  = self.getState()
         reward = self.getReward()
@@ -49,13 +49,17 @@ class SnakeEnv(gym.Env):
         return self.getState()
 
     def render(self):
-        screen = pygame.display.set_mode((self.screenWidth, self.screenHeight))
-        screen.fill((255, 255, 255))
-        for i in self.position:
-            pygame.draw.rect(screen, self.snakeColor, [i[0], i[1], self.blockSize, self.blockSize])
+        screen = np.zeros((self.screenHeight, self.screenWidth, 3), dtype = int)
+        screen[:, :] = self.screenColor
 
-        pygame.draw.rect(screen, self.foodColor, [self.foodPosition[0], self.foodPosition[1], self.blockSize, self.blockSize])
-        pygame.display.update()
+        for i in self.position:
+            screen[i[0]:i[0] + self.blockSize, \
+                   i[1]:i[1] + self.blockSize] = self.snakeColor
+
+        screen[self.foodPosition[0]:self.foodPosition[0] + self.blockSize, \
+               self.foodPosition[1]:self.foodPosition[1] + self.blockSize] = self.foodColor
+
+        return screen
 
     def newFood(self):
         """Generates new position for food."""
@@ -106,6 +110,4 @@ class SnakeEnv(gym.Env):
         return reward
 
     def close(self):
-        pygame.display.quit()
-        pygame.quit()
-        sys.exit()
+        pass
