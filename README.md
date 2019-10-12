@@ -2,7 +2,7 @@
 
 ## gym-snake
 
-The Snake environment is singleagent domain that was made for experiments with RL algorithms.
+Snake game environment is singleagent environment for experiments with RL algorithms.
 
 # Installation
 
@@ -10,7 +10,7 @@ Firstly clone this repository
 
 ```bash
 cd gym-snake
-pip install -e .
+pip3 install -e .
 ```
 
-After that you can create an instance of the environment with `gym.make('gym_snake:snake-v0')`
+After that you can create an make of the environment with `gym.make('gym_snake:snake-v0')`
