@@ -51,40 +51,40 @@ class SnakeEnv(gym.Env):
         self.__init__()
         return self.getState()
 
-    def render(self):
+    def render(self, mode='human'):
         screen = np.zeros((self.screenHeight, self.screenWidth, 3), dtype=int)
         screen[:, :] = self.screenColor
 
         for i in self.position:
             screen[i[0]:i[0] + self.blockSize,
-            i[1]:i[1] + self.blockSize] = self.snakeColor
+                   i[1]:i[1] + self.blockSize] = self.snakeColor
 
         screen[self.foodPosition[0]:self.foodPosition[0] + self.blockSize,
-        self.foodPosition[1]:self.foodPosition[1] + self.blockSize] = self.foodColor
+               self.foodPosition[1]:self.foodPosition[1] + self.blockSize] = self.foodColor
 
         return screen
 
     def newFood(self):
         """Generates new position for food."""
-        blockSize = self.blockSize
+        block_size = self.blockSize
         height = self.screenHeight
         width = self.screenWidth
-        self.foodPosition = [blockSize * np.random.randint(0, width / blockSize),
-                             blockSize * np.random.randint(0, height / blockSize)]
+        self.foodPosition = [block_size * np.random.randint(0, width / block_size),
+                             block_size * np.random.randint(0, height / block_size)]
 
     def checkPosition(self):
         """Check if game over or food eaten."""
-        headPosition = self.position[0]
+        head_position = self.position[0]
         height = self.screenHeight
         width = self.screenWidth
-        if headPosition[0] < 0 or headPosition[0] > width:
+        if head_position[0] < 0 or head_position[0] > width:
             self.done = True
-        if headPosition[1] < 0 or headPosition[1] > height:
+        if head_position[1] < 0 or head_position[1] > height:
             self.done = True
 
         if len(np.unique(self.position, axis=0)) != len(self.position):
             self.done = True
-        if headPosition == self.foodPosition:
+        if head_position == self.foodPosition:
             self.score += 1
             self.position.append(self.position[0].copy())
             self.newFood()
