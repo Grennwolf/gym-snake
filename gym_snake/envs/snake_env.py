@@ -24,7 +24,7 @@ class SnakeEnv(gym.Env):
         self.screenColor = [255, 255, 255]
         self.snakeColor = [0, 255, 0]
         self.foodColor = [255, 0, 0]
-        self.newFood()
+        self.new_food()
 
     def step(self, action):
         if not self.done:
@@ -42,14 +42,14 @@ class SnakeEnv(gym.Env):
             if self.direction == 3:
                 self.position[0][1] -= self.blockSize
 
-        state = self.getState()
-        reward = self.getReward()
+        state = self.get_state()
+        reward = self.get_reward()
         done = self.done
         return state, reward, done, None
 
     def reset(self):
         self.__init__()
-        return self.getState()
+        return self.get_state()
 
     def render(self, mode='human'):
         screen = np.zeros((self.screenHeight, self.screenWidth, 3), dtype=int)
@@ -64,15 +64,15 @@ class SnakeEnv(gym.Env):
 
         return screen
 
-    def newFood(self):
+    def new_food(self):
         """Generates new position for food."""
         block_size = self.blockSize
         height = self.screenHeight
         width = self.screenWidth
-        self.foodPosition = [block_size * np.random.randint(0, width / block_size),
-                             block_size * np.random.randint(0, height / block_size)]
+        self.foodPosition = [block_size * np.random.randint(0, width // block_size),
+                             block_size * np.random.randint(0, height // block_size)]
 
-    def checkPosition(self):
+    def check_position(self):
         """Check if game over or food eaten."""
         head_position = self.position[0]
         height = self.screenHeight
@@ -87,12 +87,12 @@ class SnakeEnv(gym.Env):
         if head_position == self.foodPosition:
             self.score += 1
             self.position.append(self.position[0].copy())
-            self.newFood()
+            self.new_food()
             return True
 
         return False
 
-    def getState(self):
+    def get_state(self):
         x = self.foodPosition
         y = self.position[0]
         z = self.position
@@ -108,10 +108,8 @@ class SnakeEnv(gym.Env):
                  int([y[0], y[1] + size] in z)]
         return np.array(state)
 
-    def getReward(self):
-        reward = -1
-        if self.checkPosition():
-            reward = 1
+    def get_reward(self):
+        reward = (1 if self.check_position() else 0)
         return reward
 
     def close(self):
